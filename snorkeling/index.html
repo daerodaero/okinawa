@@ -38,6 +38,18 @@ function rewriteMapLinksScript(){
   setTimeout(rewriteMapLinks, 0);
 <\/script>`;
 }
+function complianceFooterMarkup(){
+  return `<style>
+    .site-info-footer{margin:28px auto 0;max-width:980px;padding:18px 18px 26px;text-align:center;color:#6A7C7F;font-size:12px;line-height:1.55}
+    .site-info-footer p{margin:0 auto 10px;max-width:720px;word-break:keep-all}
+    .site-info-footer .footer-links{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+    .site-info-footer .footer-links a{color:#007c89;text-decoration:none;font-weight:800;white-space:nowrap}
+  </style>
+  <section class="site-info-footer">
+    <p>스노클링 가능 여부와 바다 상황은 날씨, 조류, 현장 통제에 따라 달라질 수 있습니다. 입수 전 현지 안전 정보와 공식 안내를 확인해 주세요.</p>
+    <nav class="footer-links" aria-label="기본 정보"><a href="/about/">소개</a><a href="/contact/">문의</a><a href="/privacy/">개인정보처리방침</a></nav>
+  </section>`;
+}
 function applyV10Patch(html){
   const replacements = [
     [/26\.6416824,127\.8559382/g, '26.650665072117175,127.8565882474518'],
@@ -66,7 +78,7 @@ function applyV10Patch(html){
     `const MAP_QUERY = ${JSON.stringify(MAP_QUERY)};\nfunction mapUrlFor(point) {\n  const query = MAP_QUERY[point.id] || \`${'${point.lat},${point.lng}'}\`;\n  return \`https://www.google.com/maps/search/?api=1&query=${'${encodeURIComponent(query)}'}\`;\n}\nfunction markerColor(point) {`
   );
   html = html.replace(/const mapsUrl = `https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=\$\{point\.lat\},\$\{point\.lng\}`;/g, 'const mapsUrl = mapUrlFor(point);');
-  html = html.replace('</body>', `${rewriteMapLinksScript()}</body>`);
+  html = html.replace('</body>', `${complianceFooterMarkup()}${rewriteMapLinksScript()}</body>`);
   return html;
 }
 (async function(){
