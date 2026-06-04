@@ -7,16 +7,40 @@
 <meta name="description" content="오키나와 스노클링 포인트와 해변 안전 정보를 정리한 지도입니다.">
 <style>
   body{margin:0;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,'Pretendard',sans-serif;background:#e8fafa;color:#06333a;display:grid;place-items:center;text-align:center;padding:24px}
-  .box{max-width:320px;line-height:1.6}
-  .icon{font-size:44px;margin-bottom:10px}
-  a{color:#007c89;font-weight:800}
+  .box{max-width:320px;line-height:1.6}.icon{font-size:44px;margin-bottom:10px}a{color:#007c89;font-weight:800}
 </style>
 <script>
+function applyV9Patch(html){
+  const replacements = [
+    [/26\.6416824,127\.8559382/g, '26.650665072117175,127.8565882474518'],
+    [/lat:26\.6416824, lng:127\.8559382/g, 'lat:26.650665072117175, lng:127.8565882474518'],
+    [/26\.5103445,127\.8509382/g, '26.49936239528,127.8418922423'],
+    [/lat:26\.5103445, lng:127\.8509382/g, 'lat:26.49936239528, lng:127.8418922423'],
+    [/アポガマ, 沖縄県国頭郡恩納村恩納周辺/g, 'アポガマ, 〒904-0411 沖縄県国頭郡恩納村字恩納4484先'],
+    [/瀬底ビーチ, 沖縄県国頭郡本部町瀬底(?!5750)/g, '瀬底ビーチ, 沖縄県国頭郡本部町瀬底5750'],
+    [/Ver\.7 · 2026\.05\.20 업데이트/g, 'Ver.9 · 2026.06.04 업데이트'],
+    [/Ver\.8 · 2026\.06\.04 업데이트/g, 'Ver.9 · 2026.06.04 업데이트']
+  ];
+  replacements.forEach(([from,to]) => { html = html.replace(from, to); });
+
+  const oldBlueCave = '<div class="actions"><a href="https://www.google.com/maps/search/?api=1&query=26.4442875,127.7745368" target="_blank" rel="noopener">지도 열기</a></div>';
+  const newBlueCave = '<div class="actions"><a href="https://www.google.com/maps/search/?api=1&query=26.4442875,127.7745368" target="_blank" rel="noopener">동굴 포인트</a><a class="secondary" href="https://www.google.com/maps/search/?api=1&query=26.443714532317824,127.77251499818074" target="_blank" rel="noopener">접근 위치</a></div>';
+  html = html.replace(oldBlueCave, newBlueCave);
+
+  if (!html.includes('26.443714532317824,127.77251499818074')) {
+    html = html.replace(
+      /(<a href="https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=26\.4442875,127\.7745368" target="_blank" rel="noopener">)(지도 열기|동굴 포인트)(<\/a>)/,
+      '$1동굴 포인트$3<a class="secondary" href="https://www.google.com/maps/search/?api=1&query=26.443714532317824,127.77251499818074" target="_blank" rel="noopener">접근 위치</a>'
+    );
+  }
+  return html;
+}
+
 (async function(){
   try{
     const response = await fetch('/test/', {cache:'no-store'});
     if(!response.ok) throw new Error('load failed');
-    const html = await response.text();
+    const html = applyV9Patch(await response.text());
     document.open();
     document.write(html);
     document.close();
@@ -29,10 +53,6 @@
 </script>
 </head>
 <body>
-  <div class="box">
-    <div class="icon">🤿</div>
-    <h1>오키나와 스노클링맵</h1>
-    <p>지도를 불러오는 중입니다.</p>
-  </div>
+  <div class="box"><div class="icon">🤿</div><h1>오키나와 스노클링맵</h1><p>지도를 불러오는 중입니다.</p></div>
 </body>
 </html>
