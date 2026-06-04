@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대로와 나나의 오키나와 스노클링맵</title>
+<meta name="description" content="오키나와 스노클링 포인트와 해변 안전 정보를 정리한 지도입니다.">
+<style>
+  body{margin:0;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,'Pretendard',sans-serif;background:#e8fafa;color:#06333a;display:grid;place-items:center;text-align:center;padding:24px}
+  .box{max-width:320px;line-height:1.6}
+  .icon{font-size:44px;margin-bottom:10px}
+  a{color:#007c89;font-weight:800}
+</style>
+<script>
+(async function(){
+  try{
+    const response = await fetch('/test/', {cache:'no-store'});
+    if(!response.ok) throw new Error('load failed');
+    const html = await response.text();
+    document.open();
+    document.write(html);
+    document.close();
+  }catch(error){
+    document.addEventListener('DOMContentLoaded', function(){
+      document.body.innerHTML = '<div class="box"><div class="icon">🤿</div><h1>오키나와 스노클링맵</h1><p>페이지를 불러오지 못했습니다.</p><p><a href="https://daeronana.com/test/">테스트 페이지로 이동하기</a></p></div>';
+    });
+  }
+})();
+</script>
+</head>
+<body>
+  <div class="box">
+    <div class="icon">🤿</div>
+    <h1>오키나와 스노클링맵</h1>
+    <p>지도를 불러오는 중입니다.</p>
+  </div>
+</body>
+</html>
